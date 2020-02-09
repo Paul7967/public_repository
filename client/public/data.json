@@ -1,0 +1,56 @@
+[{
+	"label":"Выпить кофе",
+	"description":"Сходить в кафе и выпить кофе",
+	"important":false,
+	"status":10,
+	"add_date":"05/02/2020",
+	"deadline_date":"07/02/2020",
+	"execution_time_plan":"4",
+	"execution_time_fact":"6",
+	"id":"0ebdd32e-9793-4f46-a244-fc80551e0b89"
+},
+{
+	"label":"Почитать книгу",
+	"description":"Почитать книгу после обеда",
+	"important":true,
+	"status":20,
+	"add_date":"05/02/2020",
+	"deadline_date":"09/02/2020",
+	"execution_time_plan":"7",
+	"execution_time_fact":"2",
+	"id":"1ebdd32e-9793-4f46-a244-fc80551e0b89"
+},
+{
+	"label":"Написать приложение Todo List",
+	"description":"Написать приложение используя React",
+	"important":true,
+	"status":30,
+	"add_date":"05/02/2020",
+	"deadline_date":"07/02/2020",
+	"execution_time_plan":"3",
+	"execution_time_fact":"8",
+	"id":"3ebdd32e-9793-4f46-a244-fc80551e0b89"
+},
+{
+	"label":"Отвезти машину на ТО",
+	"description":"Съездить на ТО к официалам Mercedes",
+	"important":true,
+	"status":10,
+	"add_date":"05/02/2020",
+	"deadline_date":"09/02/2020",
+	"execution_time_plan":"6",
+	"execution_time_fact":"7",
+	"id":"4ebdd32e-9793-4f46-a244-fc80551e0b89"
+},
+{
+	"label":"Встреча с Александром",
+	"description":"Встреча с Александром в чайной 'Мой чай'",
+	"important":false,
+	"status":20,
+	"add_date":"05/02/2020",
+	"deadline_date":"07/02/2020",
+	"execution_time_plan":"5",
+	"execution_time_fact":"9",
+	"id":"5ebdd32e-9793-4f46-a244-fc80551e0b89"
+}
+]
