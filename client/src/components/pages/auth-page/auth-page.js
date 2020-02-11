@@ -1,29 +1,43 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
+import { useHttp } from '../../../hooks/http-hook';
+import { AuthContext } from '../../../context/auth-context';
 import './auth-page.sass';
-import { useHttp } from '../../../hooks/http.hooks';
 
 export const AuthPage = () => {
-	const {loading, request, error} = useHttp();
+	const auth = useContext(AuthContext);
+	const {loading, request, error, clearError} = useHttp();
 	const [form, setForm] = useState({
 		email: "", 
 		password: ""
 	});
 
+	useEffect(() => {
+		if (error) {
+			alert(error);
+			clearError()
+		}
+	}, [error, clearError]);
+
 	const changeHandler = event => {
 		setForm({ ...form, [event.target.name]: event.target.value });
 	}
 	
-	const registerHandler = async () => {
+	const onRegisterBtnClick = async () => {
 		try {
-			const data = await request('http://localhost:5000/api/auth/register', 'POST', {...form})
+			const data = await request('/api/auth/register', 'POST', {...form})
 			
-			// const response = await fetch('/api/auth/register', {method: "POST", body: JSON.stringify({...form})});
-			// const response = await fetch('http://localhost:5000/api/auth/register', {method: "POST", body: JSON.stringify({...form})});
-			// const data = await response.json();
-			
-			console.log('Ответ сервера: ',data);
+			console.log('Server response: ',data.message);
 		} catch (e) {
-
+			// catch already handled in useHttp
+		}		
+	}
+	
+	const onLoginBtnClick = async () => {
+	try {
+			const {token, userId} = await request('/api/auth/login', 'POST', {...form})
+			auth.login(token, userId);
+		} catch (e) {
+			// catch already handled in useHttp
 		}		
 	}
 
@@ -54,21 +68,23 @@ export const AuthPage = () => {
 								type="password" 
 								id="password" 
 								onChange = {changeHandler}
+								disabled = { loading }
 							/>
 						</div>
 
 						<div className="card-body text-center">
 								<button 
 									className="btn btn-success btn-auth"
+									onClick = { onLoginBtnClick }
 									disabled = { loading }
 								>
 									Login
 								</button>
 								<button 
 									className="btn btn-secondary btn-auth" 
-									// onClick = { registerHandler }
-									disabled = { loading }
 									id="btn-register" 
+									onClick = { onRegisterBtnClick }
+									disabled = { loading }
 								>
 									Register
 								</button>

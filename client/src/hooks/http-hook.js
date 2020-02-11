@@ -18,11 +18,12 @@ export const useHttp = () => {
 					body = JSON.stringify(body);
 					headers['Content-Type'] = 'application/json';
 				}
+				
 				const response = await fetch(url, {method, body, headers});
 				const data = await response.json();
-
+				
 				if (!response.ok) {
-					throw new Error(data.message || 'Что-то пошло не так')
+					throw new Error(data.message || 'Something wrong');
 				};
 
 				setLoading(false);
@@ -31,7 +32,7 @@ export const useHttp = () => {
 
 			} catch (e) {
 				setLoading(false);
-				setError(e.message);
+				setError(e.message);  
 				throw e;
 			}
 		}, 
@@ -48,4 +49,5 @@ export const useHttp = () => {
 содержит в стейт значение loading, который показывает состояние запроса
 содержит в стейт значение error, который показывает есть ли ошибка и ее значение
 используем хук useCallback, чтобы react не уходил в рекурсию
+
 */

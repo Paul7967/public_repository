@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {NavLink} from 'react-router-dom';
+import { AuthContext } from '../../context/auth-context';
 
-export const Navbar = (isAuthenticated) => {
+
+export const Navbar = () => {
+	const auth = useContext(AuthContext);
+	const isAuthenticated = !!auth.token;
+	
+	const logoutHandler = () => {
+		auth.logout();
+	}
+
 	return(
 		<nav className="navbar navbar-expand-md navbar-dark bg-success">
 			<div className="container">
@@ -12,14 +21,13 @@ export const Navbar = (isAuthenticated) => {
 						<li className="nav-item">
 							{(isAuthenticated)&&<NavLink exact className="nav-link" to="/tasklist">Task list</NavLink>}
 						</li>
-						{/* <li className="nav-item">
-							{(isAuthenticated)&&<NavLink exact className="nav-link" to="/tasklist/:id">Task</NavLink>}
-						</li> */}
 					</ul>
 				</div>}
 				<div className="navbar-nav">
-					{(!isAuthenticated)&&<NavLink className="nav-link " to="/auth">Login</NavLink>}
-					{(isAuthenticated)&&<NavLink className="nav-link " to="/auth">Logout</NavLink>}
+				{(isAuthenticated)&&<NavLink
+					className="nav-link " 
+					to="/auth"
+					onClick={logoutHandler} >Logout</NavLink>}
 				</div>
 			</div>	
 		</nav>

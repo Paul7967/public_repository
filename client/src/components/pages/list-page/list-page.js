@@ -17,6 +17,7 @@ export default class ListPage extends Component {
 	};
 
 	loadData = async (url="./data.json") => {
+		console.log('Data loading...')
 		try {
 		  let headers = {};
 		  headers['Content-Type'] = 'application/json';
@@ -38,8 +39,15 @@ export default class ListPage extends Component {
 	);
 
 	componentDidMount() {
-		this.loadData("./data.json")
-			.then (this.setDataFromFile);
+		console.log('componentDidMount')
+		const loaddata2 = async () => {
+			const todoData = await this.loadData("./data.json")
+			this.setState({todoData})
+		}
+		
+		loaddata2()
+		// this.loadData("./data.json")
+			// .then (this.setDataFromFile);
 	}
 
 	deleteItem = (id) => {

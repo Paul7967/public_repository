@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {isInt, isLength} from 'validator';
-import { useHttp } from '../../../hooks/http.hooks';
+import { useHttp } from '../../../hooks/http-hook';
 import moment from 'moment';
 
 import './task-page.sass';
@@ -39,14 +39,14 @@ export const TaskPage = ({taskId}) => {
 	};
 
 	useEffect(() => {
-		get_data().
-			then((task) => setForm({ 
+		get_data()
+			.then((task) => setForm({ 
 				...task[0],
 				validation: {
 					...form.validation
 				}  
 			}));
-	},[]);
+	},[get_data]);
 
 	const validateInputValue = (inputName, inputValue, input) => {
 		const setInputValidation = (input, isValid) => {
