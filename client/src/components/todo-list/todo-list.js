@@ -6,14 +6,14 @@ import KanbanBoard from '../kanban-board';
 const TodoList = ({ todos, onDeleted, onToggleImportant, onToggleStatus, view }) => {
 	
 	const elements = todos.map((item) => {
-		const { id, ...itemProps } = item;
+		const { __v, ...itemProps } = item; // убираю служебное поле MongoDB, чтобы оно не попадало в itemProps
+		const id = item._id;
 		return (
 			<li key={id} className="list-group-item">
 				<TodoListItem 
 					view = {view}
 					id = {id}
 					{ ...itemProps } 
-					// onItemSelected = {() = onItemSelected(id)}
 					onDeleted = {() => onDeleted(id)} 
 					onToggleImportant = {() => onToggleImportant(id)} 
 					onToggleStatus={() => onToggleStatus(id)}

@@ -5,7 +5,7 @@ const KanbanColumn = ({todos, status, columnLabel}) => {
 	
 	let a = todos.filter((item) => {return item.status===status});
 	let cards = a.map((item)=>{
-		return <KanbanCard key={item.id} {...item} /> 
+		return <KanbanCard key={item._id} {...item} /> 
 	})
 
 	return (

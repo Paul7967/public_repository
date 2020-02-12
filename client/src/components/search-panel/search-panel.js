@@ -10,7 +10,7 @@ export default class SearchPanel extends Component {
 	onChange = (e) =>{
 		const filterText = e.target.value;
 		this.setState({	filterText });
-		this.props.onFilterList(filterText);
+		this.props.onSearchInList(filterText);
 	};
 
 	render () {
@@ -21,5 +21,3 @@ export default class SearchPanel extends Component {
 		</input>;
 	};
 };
-
-// export default SearchPanel;

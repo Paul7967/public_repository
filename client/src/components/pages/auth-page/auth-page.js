@@ -22,11 +22,20 @@ export const AuthPage = () => {
 		setForm({ ...form, [event.target.name]: event.target.value });
 	}
 	
+	const pressHandler = event =>{
+		if (event.key === 'Enter') {
+			onLoginBtnClick();
+		}
+	}
+
 	const onRegisterBtnClick = async () => {
 		try {
 			const data = await request('/api/auth/register', 'POST', {...form})
 			
-			console.log('Server response: ',data.message);
+			// console.log('Server response: ',data.message);
+			if (data && data.message === "User created") {
+				onLoginBtnClick();
+			}
 		} catch (e) {
 			// catch already handled in useHttp
 		}		
@@ -56,6 +65,7 @@ export const AuthPage = () => {
 								id="email" 
 								aria-describedby="emailHelp" 
 								onChange = {changeHandler}
+								onKeyPress={pressHandler}
 							/>
 							
 							<small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
@@ -69,6 +79,7 @@ export const AuthPage = () => {
 								id="password" 
 								onChange = {changeHandler}
 								disabled = { loading }
+								onKeyPress={pressHandler}
 							/>
 						</div>
 

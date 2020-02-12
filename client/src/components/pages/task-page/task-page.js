@@ -1,12 +1,31 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, useContext} from 'react';
 import {isInt, isLength} from 'validator';
 import { useHttp } from '../../../hooks/http-hook';
-import moment from 'moment';
+import {useParams} from 'react-router-dom';
+import { AuthContext } from '../../../context/auth-context';
+import Loader from './../../loader/index';
+import moment from 'moment';  // работа с датами
 
 import './task-page.sass';
-export const TaskPage = ({taskId}) => {
-	const {request} = useHttp();
-	// const {loading, request, error} = useHttp();
+
+
+export const TaskPage = () => {
+	const {token} = useContext(AuthContext);
+	const {request, loading} = useHttp();
+	const taskId = useParams().id;
+	
+	const getTask = useCallback(async() => {
+		try {
+			const taskData = await request(`/api/tasks/${taskId}`, 'GET', null, {
+				authorization: `Bearer ${token}` 
+			})
+			if (taskData) {
+				setForm({...taskData, validation: {...form.validation}})
+			}
+		} catch (e) {}
+	}, [token, taskId, request])
+
+
 	const [form, setForm] = useState({
 		label:"",
 		description:"",
@@ -27,26 +46,9 @@ export const TaskPage = ({taskId}) => {
 		}
 	});
 
-	const get_data = async () => {
-		try {
-			const task_list = await request('./../data.json', 'GET')
-			const task = task_list.filter((item) => item.id===taskId)
-			
-			return task;
-		} catch (e) {
-
-		}		
-	};
-
 	useEffect(() => {
-		get_data()
-			.then((task) => setForm({ 
-				...task[0],
-				validation: {
-					...form.validation
-				}  
-			}));
-	},[get_data]);
+		getTask()
+	},[getTask]);
 
 	const validateInputValue = (inputName, inputValue, input) => {
 		const setInputValidation = (input, isValid) => {
@@ -121,12 +123,12 @@ export const TaskPage = ({taskId}) => {
 	
 	const btnOKHandler = async () => {
 		console.log(form)
-		let d = moment.utc(form.deadline_date,'DD/MM/YYYY').toISOString().substr(0,10)
-		let b = moment.utc(form.add_date,'DD/MM/YYYY').format('YYYY-MM-DD')
-		const obj = {
-			d, b
-		}
-		console.log(obj)
+		// let d = moment.utc(form.deadline_date,'DD/MM/YYYY').toISOString().substr(0,10)
+		// let b = moment.utc(form.add_date,'DD/MM/YYYY').format('YYYY-MM-DD')
+		// const obj = {
+		// 	d, b
+		// }
+		// console.log(obj)
 		
 		// try {
 		// 	const {nameIsValid, surnameIsValid, ageIsValid, positionIsValid} = form.validation;
@@ -143,6 +145,10 @@ export const TaskPage = ({taskId}) => {
 		// } catch (e) {}	// cath уже обработан в хуке useHttp
 	}
 	
+	if (loading) {
+		return <Loader />
+	}
+
 	return (
 		<div className="container">
 			<div className="card mb-3 w-90 p-2 text-white bg-light" >
@@ -231,7 +237,7 @@ export const TaskPage = ({taskId}) => {
 								type="date" 
 								// type="text" 
 								id="deadline_date" 
-								value={moment.utc(form.deadline_date.toString(),'DD/MM/YYYY').format('YYYY-MM-DD')}
+								// value={moment.utc(form.deadline_date.toString(),'DD/MM/YYYY').format('YYYY-MM-DD')}
 								// defaultValue={moment.utc(form.deadline_date,'DD/MM/YYYY').toISOString().substr(0,10)}
 								// defaultValue={form.deadline_date}
 								onChange = {changeHandler}

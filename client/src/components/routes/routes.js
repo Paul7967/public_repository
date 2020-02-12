@@ -10,12 +10,7 @@ export const useRoutes = (isAuthenticated) => {
 	const RoutesForAuthenticatedUser = () => (
 		<Switch>
 			<Route path="/tasklist" exact component={ListPage} />
-			{/* <Route path="/tasklist" exact component={()=><div>ListPage</div>} /> */}
-			{/* <Route path="/tasklist/:id" 
-				render={({match}) => {
-					const {id} = match.params;
-					return <TaskPage taskId={id}/>
-				}} /> */}
+			<Route path="/tasklist/:id" component={TaskPage} />
 			<Route path="/auth" component={AuthPage} />
 			<Redirect to="/tasklist" />
 		</Switch>

@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import {NavLink} from 'react-router-dom';
 import { AuthContext } from '../../context/auth-context';
 
-
 export const Navbar = () => {
 	const auth = useContext(AuthContext);
 	const isAuthenticated = !!auth.token;
@@ -15,7 +14,6 @@ export const Navbar = () => {
 		<nav className="navbar navbar-expand-md navbar-dark bg-success">
 			<div className="container">
 				<NavLink exact className="navbar-brand" to="/"><h3>Todo List</h3></NavLink>
-				
 				{<div className="navbar-collapse">
 					<ul className="navbar-nav mr-auto">
 						<li className="nav-item">
@@ -24,10 +22,15 @@ export const Navbar = () => {
 					</ul>
 				</div>}
 				<div className="navbar-nav">
-				{(isAuthenticated)&&<NavLink
-					className="nav-link " 
-					to="/auth"
-					onClick={logoutHandler} >Logout</NavLink>}
+				{
+					(isAuthenticated) && 
+					<NavLink
+						className="nav-link " 
+						to="/auth"
+						onClick={logoutHandler} >
+						Logout
+					</NavLink>
+				}
 				</div>
 			</div>	
 		</nav>

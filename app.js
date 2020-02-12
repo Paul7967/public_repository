@@ -8,18 +8,18 @@ app.use(express.json({ extended: true })); // for correct req.body parsing
 
 // routes
 app.use('/api/auth', require('./routes/auth.routes'));
+app.use('/api/tasks', require('./routes/task.routes'));
 
 const PORT = config.get('port') || 5000;
 
 async function start() {
 	try {
 		await mongoose.connect(
-			// config.get('mongoUri'),
-			"mongodb+srv://pavel:49iPFM7LbnfeKGwT@cluster0-bvo9t.azure.mongodb.net/app?retryWrites=true&w=majority",
+			config.get('mongoUri'),
 		{
-			useNewUrlParser: true
-			,useUnifiedTopology: true
-			,useCreateIndex: true
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+			useCreateIndex: true
 		})
 		console.log('MongoDB connected')
 		app.listen(PORT, ()=> console.log(`Server is running on port ${PORT}`))
