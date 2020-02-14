@@ -4,7 +4,6 @@ import { useHttp } from '../../../hooks/http-hook';
 import {useParams} from 'react-router-dom';
 import { AuthContext } from '../../../context/auth-context';
 import Loader from './../../loader/index';
-import moment from 'moment';  // работа с датами
 
 import './task-page.sass';
 
@@ -13,18 +12,6 @@ export const TaskPage = () => {
 	const {token} = useContext(AuthContext);
 	const {request, loading} = useHttp();
 	const taskId = useParams().id;
-	
-	const getTask = useCallback(async() => {
-		try {
-			const taskData = await request(`/api/tasks/${taskId}`, 'GET', null, {
-				authorization: `Bearer ${token}` 
-			})
-			if (taskData) {
-				setForm({...taskData, validation: {...form.validation}})
-			}
-		} catch (e) {}
-	}, [token, taskId, request])
-
 
 	const [form, setForm] = useState({
 		label:"",
@@ -35,7 +22,8 @@ export const TaskPage = () => {
 		deadline_date:"",
 		execution_time_plan:"",
 		execution_time_fact:"",
-		id:"",
+		_id:"",
+		user_id: "",
 		validation: {
 			labelValidationText: '',
 			labelIsValid: false,
@@ -46,9 +34,35 @@ export const TaskPage = () => {
 		}
 	});
 
+	const getTask = useCallback(async() => {
+		try {
+			const taskData = await request(`/api/tasks/${taskId}`, 'GET', null, {
+				authorization: `Bearer ${token}` 
+			})
+			if (taskData) {
+				setForm({...form, ...taskData})
+				return taskData
+			}
+		} catch (e) {}
+	}, [token, taskId, request])
+
 	useEffect(() => {
 		getTask()
 	},[getTask]);
+
+	const updateTask = async(taskToEdit) => {
+		try {
+			const taskData = await request(
+				`/api/tasks/edit`, 
+				'POST',
+				{...taskToEdit}, 
+				{authorization: `Bearer ${token}` }
+			)
+			if (taskData && taskData.message === "Task edited") {
+				getTask();
+			}
+		} catch (e) {}
+	};
 
 	const validateInputValue = (inputName, inputValue, input) => {
 		const setInputValidation = (input, isValid) => {
@@ -65,6 +79,13 @@ export const TaskPage = () => {
 				feedbackElement.classList.add("invalid-feedback")
 				feedbackElement.classList.remove("valid-feedback")
 			};
+		};
+
+		const setValueToState = () => {
+			setForm({ 
+				...form,
+				[inputName]: inputValue
+			});
 		};
 
 		const setValidationToState = (fieldName, isValid, validationText) => {
@@ -112,37 +133,22 @@ export const TaskPage = () => {
 				}
 				break;
 			default:
+				setValueToState();
 		}
 	}
 
 	const changeHandler = event => {
 		const input = event.target;
-		const {name: inputName, value: inputValue} = input;
+		let {name: inputName, value: inputValue} = input;
+		if (input.type==="checkbox") {
+			inputValue = input.checked;
+		}
 		validateInputValue(inputName, inputValue, input);
 	};
 	
 	const btnOKHandler = async () => {
-		console.log(form)
-		// let d = moment.utc(form.deadline_date,'DD/MM/YYYY').toISOString().substr(0,10)
-		// let b = moment.utc(form.add_date,'DD/MM/YYYY').format('YYYY-MM-DD')
-		// const obj = {
-		// 	d, b
-		// }
-		// console.log(obj)
-		
-		// try {
-		// 	const {nameIsValid, surnameIsValid, ageIsValid, positionIsValid} = form.validation;
-		// 	if (nameIsValid && surnameIsValid && ageIsValid && positionIsValid) {
-		// 		const data = await request('http://localhost:5000/addworker', 'POST', {...form, validation: null})
-		// 		if (data) {
-		// 			history.push(`/workers`)
-		// 		}
-
-		// 	} else {
-		// 		alert('Not all fields are correctly filled.')
-		// 	}
-			
-		// } catch (e) {}	// cath уже обработан в хуке useHttp
+		const {validation, ...editTask} = form;
+		updateTask(editTask)
 	}
 	
 	if (loading) {
@@ -152,7 +158,7 @@ export const TaskPage = () => {
 	return (
 		<div className="container">
 			<div className="card mb-3 w-90 p-2 text-white bg-light" >
-				<div className="card-header text-dark">{form.label}</div>
+				<div className="card-header text-dark font-weight-bold">{form.label}</div>
 				<div className="card-body">
 
 					<div className="d-flex flex-wrap justify-content-start">
@@ -174,9 +180,8 @@ export const TaskPage = () => {
 							<label className="text-success" htmlFor="cbstatus">Status</label>
 							<select 
 								name="status" 
-								defaultValue="30"
-								// defaultValue={form.status.toString()} 
-								// onChange = {changeHandler} 
+								value={form.status} 
+								onChange = {changeHandler} 
 								className="form-control" 
 								id="cbstatus" 
 							>
@@ -192,12 +197,12 @@ export const TaskPage = () => {
 							<div className="form-check">
 								<label className="form-check-label">
 									<input 
-										name="Important" 
+										name="important" 
 										onChange = {changeHandler} 
 										className="form-check-input" 
 										type="checkbox" 
-										defaultChecked
-										value="true" />
+										checked={form.important}
+										/>
 									Important
 								</label>
 							</div>
@@ -223,7 +228,7 @@ export const TaskPage = () => {
 								name="add_date" 
 								className="form-control mb-2" 
 								type="date" 
-								value={moment.utc(form.add_date,'DD/MM/YYYY').format('YYYY-MM-DD')}
+								defaultValue={form.add_date}
 								id="add_date" 
 								onChange = {changeHandler}
 							/>
@@ -235,11 +240,8 @@ export const TaskPage = () => {
 								name="deadline_date" 
 								className="form-control mb-2" 
 								type="date" 
-								// type="text" 
 								id="deadline_date" 
-								// value={moment.utc(form.deadline_date.toString(),'DD/MM/YYYY').format('YYYY-MM-DD')}
-								// defaultValue={moment.utc(form.deadline_date,'DD/MM/YYYY').toISOString().substr(0,10)}
-								// defaultValue={form.deadline_date}
+								defaultValue={form.deadline_date}
 								onChange = {changeHandler}
 							/>
 							<div name="age-validation-feedback" className="invalid-feedback">{form.validation.ageValidationText}</div>

@@ -1,23 +1,22 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './search-panel.css';
 
-export default class SearchPanel extends Component {
-	
-	state = {
-		filterText: ''
+export const SearchPanel = ({ onSearchInList }) => {
+	const [filterText, setFilterText] = useState('');
+
+	const onChange = (e) =>{
+		const filterTextVal = e.target.value;
+		setFilterText(filterTextVal);
+		onSearchInList(filterTextVal);
 	};
 
-	onChange = (e) =>{
-		const filterText = e.target.value;
-		this.setState({	filterText });
-		this.props.onSearchInList(filterText);
-	};
-
-	render () {
-
-		return <input type='text' className="search-input" placeholder='type to search'
-		onChange={ this.onChange } 
-		value={this.state.filterText}>
-		</input>;
-	};
+	return (
+		<input 
+			type='text' 
+			className="search-input" 
+			placeholder='type to search'
+			onChange={onChange} 
+			value={filterText}>
+		</input>
+	);
 };

@@ -33,7 +33,7 @@ export const ListPage = () => {
 
 	useEffect(() => {
 		getTaskList()
-	},[getTaskList]);
+	}, [getTaskList]);
 
 	const updateTask = async(taskToEdit) => {
 		try {
@@ -89,7 +89,6 @@ export const ListPage = () => {
 	};
 
 	const onToggleImportant = (id) => {
-		// console.log(toggleTaskProperty(todoData, id, 'important'))
 		updateTask(toggleTaskProperty(todoData, id, 'important'));
 	};
 

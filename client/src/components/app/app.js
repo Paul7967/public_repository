@@ -8,7 +8,7 @@ import Loader from './../loader';
 import './app.css';
 
 const App = () => {
-	const {token, login, logout, userId, ready} = useAuth();
+	const {token, login, logout, userId, ready, userEmail} = useAuth();
 	const isAuthenticated = !!token;
 	const routes = useRoutes(isAuthenticated);
 
@@ -17,7 +17,7 @@ const App = () => {
 	}
 
 	return (
-		<AuthContext.Provider value={{token, login, logout, userId, isAuthenticated}} >
+		<AuthContext.Provider value={{token, login, logout, userId, isAuthenticated, userEmail}} >
 			<Router>
 				{routes}
 			</Router>

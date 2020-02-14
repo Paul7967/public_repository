@@ -9,7 +9,6 @@ const schema = new Schema({
 	deadline_date: {type: String},
 	execution_time_plan: {type: Number},
 	execution_time_fact: {type: Number},
-	// task_id: {type: String, required: true, unique: true},
 	user_id: {type: Types.ObjectId, ref: 'User'}
 });
 

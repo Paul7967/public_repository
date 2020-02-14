@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, Fragment } from 'react';
 import {NavLink} from 'react-router-dom';
 import { AuthContext } from '../../context/auth-context';
 
 export const Navbar = () => {
 	const auth = useContext(AuthContext);
 	const isAuthenticated = !!auth.token;
-	
 	const logoutHandler = () => {
 		auth.logout();
 	}
@@ -24,12 +23,16 @@ export const Navbar = () => {
 				<div className="navbar-nav">
 				{
 					(isAuthenticated) && 
-					<NavLink
-						className="nav-link " 
-						to="/auth"
-						onClick={logoutHandler} >
-						Logout
-					</NavLink>
+					<Fragment>
+						<span className="nav-link text-white" >{auth.userEmail}</span>
+						<NavLink
+							className="nav-link " 
+							to="/auth"
+							onClick={logoutHandler} >
+							Logout
+						</NavLink>	
+					</Fragment>
+					
 				}
 				</div>
 			</div>	
