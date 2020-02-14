@@ -1,0 +1,6 @@
+{
+	"port": 5000,
+	"mongoUri": "mongodb+srv://pavel:49iPFM7LbnfeKGwT@cluster0-bvo9t.azure.mongodb.net/todoapp",
+	"jwtSecret": "very strong secret string",
+	"baseUrl": "http://localhost:5000"
+}

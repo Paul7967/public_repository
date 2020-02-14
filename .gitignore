@@ -5,7 +5,7 @@ commit.bat
 
 # dependencies
 /node_modules
-/config
+#/config
 /client/node_modules
 /client/.pnp
 /client/.pnp.js
